@@ -5,44 +5,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bautismo Eithan</title>
 
-<!-- 
-    ========================================================================
-    CONFIGURACIÓN PARA WHATSAPP (ETIQUETAS OPEN GRAPH)
-    ========================================================================
-    IMPORTANTE: Reemplaza "TU_USUARIO" y "NOMBRE_REPOSITORIO" con tus datos 
-    reales de GitHub para que la vista previa de la foto funcione.
--->
+<!-- CONFIGURACIÓN PARA WHATSAPP -->
 <meta property="og:title" content="¡Invitación al Bautismo de Eithan!" />
-<meta property="og:description" content="Te invitamos a sumarte a este gran día. Ingresa aquí para ver la invitación 👇" />
-<meta property="og:image" content="https://pcesde.github.io/bautismo-eithan/7.png" />
+<meta property="og:description" content="Te invitamos a sumarte a este gran día. Ingresa aquí para ver todos los detalles 👇" />
+<meta property="og:image" content="https://github.io" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:type" content="website" />
 
 <style>
+/* Configuración global del scroll continuo y fluido */
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     background: black;
-    cursor: pointer; /* Le indica al usuario que la pantalla es interactiva */
-    overflow-x: hidden;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden; /* Bloquea el scroll hasta que den clic en ingresar */
 }
 
-/* Estilo sutil para avisar que la música está activa */
-.indicador-musica {
+/* 🌟 PANTALLA DE BIENVENIDA OBLIGATORIA PARA ACTIVAR EL AUDIO */
+.pantalla-inicio {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-family: Arial, sans-serif;
-    font-size: 12px;
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-    pointer-events: none;
-    opacity: 0.7;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+/* Estilo del botón elegante */
+.boton-ingresar {
+    padding: 15px 35px;
+    font-size: 16px;
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.boton-ingresar:active {
+    transform: scale(0.95);
 }
 
 .galeria {
@@ -53,16 +70,12 @@ body {
 .imagen {
     width: 100%;
     height: 100vh;
-    /* Estado inicial: oculto y ligeramente desplazado hacia abajo */
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1.2s ease-out, transform 1.2s ease-out;
-}
-
-/* Clase que se aplicará automáticamente al hacer scroll */
-.imagen.visible {
-    opacity: 1;
-    transform: translateY(0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    view-timeline-name: --revelarImagen;
+    view-timeline-axis: block;
 }
 
 .imagen img {
@@ -70,14 +83,31 @@ body {
     height: 100%;
     object-fit: contain;
     display: block;
+    animation-name: aparecerGradual;
+    animation-fill-mode: both;
+    animation-timeline: --revelarImagen;
+    animation-range: entry 10% cover 40%;
+}
+
+@keyframes aparecerGradual {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 </style>
 </head>
 
 <body>
 
-<!-- Mensaje flotante en pantalla -->
-<div class="indicador-musica">🎵 deslizar</div>
+<!-- 🌟 Pantalla de bienvenida interactiva -->
+<div id="pantallaInicio" class="pantalla-inicio">
+    <button class="boton-ingresar" onclick="comenzarInvitacion()">ABRIR INVITACIÓN 🕊️</button>
+</div>
 
 <!-- Elemento de audio (oculto) en bucle -->
 <audio id="musicaFondo" loop>
@@ -85,7 +115,7 @@ body {
     Tu navegador no soporta el elemento de audio.
 </audio>
 
-<!-- Galería de fotos de la invitación -->
+<!-- Galería de fotos -->
 <div class="galeria">
     <div class="imagen"><img src="1.png"></div>
     <div class="imagen"><img src="2.png"></div>
@@ -99,46 +129,34 @@ body {
 var audio = document.getElementById('musicaFondo');
 var musicaIniciada = false;
 
-// 1. Activa el audio al primer toque en la pantalla
-document.addEventListener('click', function() {
+function comenzarInvitacion() {
+    // 1. Oculta la pantalla de inicio con una transición suave
+    var pantalla = document.getElementById('pantallaInicio');
+    pantalla.style.opacity = '0';
+    pantalla.style.visibility = 'hidden';
+    
+    // 2. Permite el scroll para ver las fotos
+    document.body.style.overflow = 'auto';
+
+    // 3. Reproduce la música de forma segura
     audio.play().then(function() {
-        document.querySelector('.indicador-musica').style.display = 'none';
         musicaIniciada = true;
     }).catch(function(error) {
         console.log("Error al reproducir el audio:", error);
     });
-}, { once: true });
+}
 
-// 2. Control de estado: Apaga la música al minimizar o cambiar de pestaña
+// Control de estado: Apaga la música al minimizar o salir
 document.addEventListener('visibilitychange', function() {
     if (!musicaIniciada) return;
 
     if (document.hidden) {
-        audio.pause();
+        audio.pause(); // Se minimizó: Apaga la música
     } else {
         audio.play().catch(function(error) {
             console.log("No se pudo reanudar el audio:", error);
-        });
+        }); // Regresó: Enciende la música de nuevo
     }
-});
-
-// 3. Script para la transición suave al hacer scroll
-document.addEventListener("DOMContentLoaded", function() {
-    var imagenes = document.querySelectorAll('.imagen');
-    
-    var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, {
-        threshold: 0.15 // La animación inicia cuando se ve el 15% de la imagen
-    });
-
-    imagenes.forEach(function(img) {
-        observer.observe(img);
-    });
 });
 </script>
 
