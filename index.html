@@ -5,11 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bautismo Eithan</title>
 
+<!-- 
+    ========================================================================
+    CONFIGURACIÓN PARA WHATSAPP (ETIQUETAS OPEN GRAPH)
+    ========================================================================
+    IMPORTANTE: Reemplaza "TU_USUARIO" y "NOMBRE_REPOSITORIO" con tus datos 
+    reales de GitHub para que la vista previa de la foto funcione.
+-->
+<meta property="og:title" content="¡Invitación al Bautismo de Eithan!" />
+<meta property="og:description" content="Te invitamos a sumarte a este gran día. Ingresa aquí para ver todos los detalles 👇" />
+<meta property="og:image" content="https://TU_USUARIO.github.io/NOMBRE_REPOSITORIO/1.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:type" content="website" />
+
 <style>
 body {
     margin: 0;
     background: black;
-    cursor: pointer; /* Indica al usuario que puede hacer clic */
+    cursor: pointer; /* Le indica al usuario que la pantalla es interactiva */
+}
+
+/* Estilo sutil para avisar que la música está activa */
+.indicador-musica {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0.7;
 }
 
 .galeria {
@@ -33,12 +65,16 @@ body {
 
 <body>
 
-<!-- Audio oculto configurado para repetirse en bucle -->
+<!-- Mensaje flotante en pantalla -->
+<div class="indicador-musica">🎵 Toca la pantalla para activar sonido</div>
+
+<!-- Elemento de audio (oculto) en bucle -->
 <audio id="musicaFondo" loop>
     <source src="musica-bautismo.mp3" type="audio/mpeg">
     Tu navegador no soporta el elemento de audio.
 </audio>
 
+<!-- Galería de fotos de la invitación -->
 <div class="galeria">
     <div class="imagen"><img src="1.png"></div>
     <div class="imagen"><img src="2.png"></div>
@@ -49,13 +85,16 @@ body {
 </div>
 
 <script>
-// Código que activa la música al primer toque en cualquier parte de la pantalla
+// Activa el audio inmediatamente cuando el invitado interactúa con la pantalla
 document.addEventListener('click', function() {
     var audio = document.getElementById('musicaFondo');
-    audio.play().catch(function(error) {
-        console.log("La reproducción automática fue prevenida por el navegador:", error);
+    audio.play().then(function() {
+        // Si la música arranca con éxito, ocultamos el cartel flotante
+        document.querySelector('.indicador-musica').style.display = 'none';
+    }).catch(function(error) {
+        console.log("Error al reproducir el audio:", error);
     });
-}, { once: true }); // '{ once: true }' asegura que el código solo se ejecute con el primer clic
+}, { once: true }); // Solo se ejecuta al primer toque
 </script>
 
 </body>
